@@ -1,9 +1,10 @@
-enum Direction {
-  Up,
-  Right,
-  Bottom,
-  Left,
-}
+//? Modules
+mod libs;
+
+//? Usage::Source
+//use libs::functions::option::Option;
+//use libs::utils::Direction;
+use libs::{functions::option::Option, utils::Direction};
 
 fn main() {
   println!("Hello, SKN!");
@@ -127,6 +128,7 @@ fn main() {
   //* most things are evaluated and return some value
   //* Things can be nested very easily for that
 
+  //* Each item of an enum is called a variant
   enum AccessLevelType {
     Admin,
     Manager,
@@ -270,6 +272,7 @@ fn main() {
     }
   }
 
+  //* It's just like TypeScript Array of Color Object
   let vector5: Vec<Color> = vec![Color::new(1, 2), Color::new(3, 4), Color::new(6, 7)];
 
   for item in vector5 {
@@ -278,4 +281,96 @@ fn main() {
   }
 
   // print!("Length of Vector5: {} \n", vector5.len()); //* This won't work as vector5 ownership has been moved to the for loop & got destroyed after completion
+
+  //* String
+  /*
+    * (1) `String` : it is owned i.e. it should only be used in a struct, a enum because structs cleans up memories on their own and with the borrowed string it is not possible
+    * (2) `&str` : it is borrowed i.e. it should only be used in functions
+    * (3) Strings are automatically borrowed, so careful when using strings; infact structs must not have borrowed variables
+    * (4) To make a string not borrowed, you can use either `.to_owned()` or `String::from()` methods
+
+  */
+
+  let option: Option = Option::new(7, String::from("google"), 1);
+
+  option.format();
+
+  //* Derive
+  //* To print out `enum` & `struct`, you must use derive.
+  //* `#[]` is called `attribute` in Rust
+
+  #[derive(Debug, Clone, Copy)] //* Clone & Copy ensures ownership intact, instead it clones and copies
+  enum Person {
+    Best,
+    Bullshit,
+  }
+
+  //* If debugging a struct that contains an enum, then that enum must be debugged with derive as well
+  #[derive(Debug, Clone)]
+  struct Human {
+    name: String,
+    character: Person,
+  }
+
+  impl Human {
+    fn new(name: String, character: Person) -> Self {
+      Self { name, character }
+    }
+  }
+
+  let human: Human = Human::new(String::from("SKN"), Person::Best);
+
+  print!("{:?}", human);
+
+  //* Advanced Enums Variants With Values
+  enum Discount {
+    Flat(u8),
+    Percent(u8),
+  }
+
+  struct Ticket {
+    event: String,
+    price: f32,
+  }
+
+  impl Ticket {
+    fn new(event: String, price: f32) -> Self {
+      Self { event, price }
+    }
+  }
+
+  let flat: Discount = Discount::Flat(7);
+
+  //* Advanced `match`
+  match flat {
+    | Discount::Flat(7) => print!("Flat Disount: 7 \n"),
+    | Discount::Flat(other) => print!("Flat Discount With Other Value: {} \n", other),
+    | Discount::Percent(_) => (), //* `_` are ignored, so it is better to use `other` to handle all others
+  }
+
+  let ticket: Ticket = Ticket::new(String::from("Fair!"), 30.0);
+
+  match ticket {
+    | Ticket { price, .. } => print!("Ticket Price: {} \n", price), //* In `struct`, `..` means any other/  ignore all other
+  }
+
+  enum AnimeTicket {
+    Standard(f32),
+    VIP(f32, String),
+    BackSeat(f32, String),
+  }
+
+  let tickets: Vec<AnimeTicket> = vec![
+    AnimeTicket::Standard(10.0),
+    AnimeTicket::VIP(30.0, String::from("Wang So")),
+    AnimeTicket::BackSeat(15.0, String::from("Shukhan")),
+  ];
+
+  for ticket in tickets {
+    match ticket {
+      | AnimeTicket::BackSeat(price, holder) => print!("Price @{}, Holder: {} \n", price, holder),
+      | AnimeTicket::VIP(price, holder) => print!("Price @{}, Holder: {} \n", price, holder),
+      | AnimeTicket::Standard(price) => print!("Price @{} \n", price),
+    }
+  }
 }
