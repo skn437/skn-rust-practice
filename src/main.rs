@@ -1,10 +1,13 @@
 //? Modules
 mod libs;
+mod tests;
 
 //? Usage::Source
 //use libs::functions::option::Option;
 //use libs::utils::Direction;
-use libs::{functions::option::Option, utils::Direction};
+use libs::{
+  components::user::create_user, components::user_type, functions::option::Option, utils::Direction,
+};
 
 fn main() {
   println!("Hello, SKN!");
@@ -373,4 +376,9 @@ fn main() {
       | AnimeTicket::Standard(price) => print!("Price @{} \n", price),
     }
   }
+
+  let user: user_type::User =
+    create_user("Wang".to_owned(), None, "skn437physx@gmail.com".to_owned());
+
+  user.show_age();
 }
