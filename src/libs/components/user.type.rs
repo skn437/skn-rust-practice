@@ -1,6 +1,8 @@
+use console::style;
+
 pub struct User {
   name: String,
-  age: Option<u8>,
+  age: Option<u8>, //* `Option` is predefined enum with variants: `Some() & None`
   email: String,
 }
 
@@ -12,7 +14,11 @@ impl User {
   pub fn show_age(&self) {
     match self.age {
       | Some(age) => print!("{}'s age is: {} & email: {} \n", self.name, age, self.email),
-      | None => print!("{}'s age is not provided! \n", self.name),
+      | None => print!(
+        "{}{} \n",
+        self.name,
+        style("'s age is not provided!").blue(),
+      ),
     }
   }
 }
