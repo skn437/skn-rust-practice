@@ -2,11 +2,15 @@
 mod libs;
 mod tests;
 
+use std::process::Command;
+
 //? Usage::Source
 //use libs::functions::option::Option;
 //use libs::utils::Direction;
 use libs::{
-  components::user::create_user, components::user_type, functions::option::Option, utils::Direction,
+  components::grocery_type::Grocery, components::user::create_user, components::user_type,
+  functions::option, utils::execution::execute_command, utils::execution::gt_execute_command,
+  utils::Direction,
 };
 
 fn main() {
@@ -294,7 +298,7 @@ fn main() {
 
   */
 
-  let option: Option = Option::new(7, String::from("google"), 1);
+  let option: option::Option = option::Option::new(7, String::from("google"), 1);
 
   option.format();
 
@@ -381,4 +385,22 @@ fn main() {
     create_user("Wang".to_owned(), None, "skn437physx@gmail.com".to_owned());
 
   user.show_age();
+
+  let cereal: Grocery = Grocery::new("cereal".to_owned(), 5);
+  let egg: Grocery = Grocery::new("egg".to_owned(), 9);
+  let noodles: Grocery = Grocery::new("noodles".to_owned(), 7);
+
+  let grocery_items: Vec<Grocery> = vec![cereal, egg, noodles];
+
+  let item_count: Option<u8> = Grocery::check_quantity(grocery_items, "egg");
+
+  print!("Item Count: {:?} \n", item_count);
+
+  //* Execute Commands
+  execute_command(
+    "gnome-terminal",
+    &["--", "bash", "-c", "bash cmd.sh; read -n 1 KEY"],
+  );
+
+  gt_execute_command("bash cmd.sh; read -n 1 KEY");
 }
