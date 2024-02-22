@@ -2,15 +2,13 @@
 mod libs;
 mod tests;
 
-use std::process::Command;
-
 //? Usage::Source
 //use libs::functions::option::Option;
 //use libs::utils::Direction;
 use libs::{
-  components::grocery_type::Grocery, components::user::create_user, components::user_type,
-  functions::option, utils::execution::execute_command, utils::execution::gt_execute_command,
-  utils::Direction,
+  components::adult_type::Adult, components::grocery_type::Grocery, components::menu,
+  components::selection, components::user::create_user, components::user_type, functions::option,
+  utils::execution::execute_command, utils::execution::gt_execute_command, utils::Direction,
 };
 
 fn main() {
@@ -307,6 +305,7 @@ fn main() {
   //* `#[]` is called `attribute` in Rust
 
   #[derive(Debug, Clone, Copy)] //* Clone & Copy ensures ownership intact, instead it clones and copies
+  #[allow(dead_code)]
   enum Person {
     Best,
     Bullshit,
@@ -314,6 +313,7 @@ fn main() {
 
   //* If debugging a struct that contains an enum, then that enum must be debugged with derive as well
   #[derive(Debug, Clone)]
+  #[allow(dead_code)]
   struct Human {
     name: String,
     character: Person,
@@ -330,11 +330,13 @@ fn main() {
   print!("{:?}", human);
 
   //* Advanced Enums Variants With Values
+  #[allow(dead_code)]
   enum Discount {
     Flat(u8),
     Percent(u8),
   }
 
+  #[allow(dead_code)]
   struct Ticket {
     event: String,
     price: f32,
@@ -403,4 +405,19 @@ fn main() {
   );
 
   gt_execute_command("bash cmd.sh; read -n 1 KEY");
+
+  //* Result<>, Ok(), Err() Practice
+  //* If any function returns `Result<>`, then it should be caught in a variable as error may occur
+  let choice: Result<(), String> = menu::pick_choice("stat");
+  print!("Result: {:?}\n", choice);
+
+  let select: Result<(), String> = selection::pick_choice("docker");
+  print!("Selection Result: {:?} \n", select);
+
+  let adult: Result<Adult, &str> = Adult::new("SKN", 15);
+
+  Adult::check_status(adult);
+
+  let adult2: Result<Adult, &str> = Adult::new("Wang So", 30);
+  Adult::check_status(adult2);
 }
