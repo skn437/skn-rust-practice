@@ -1,3 +1,5 @@
+//* The test files should contain `#[cfg(test)]` attribute
+#[cfg(test)]
 use super::example::sum;
 
 #[test]
