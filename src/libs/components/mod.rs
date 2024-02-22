@@ -18,3 +18,8 @@ pub mod selection;
 
 #[path = "adult.type.rs"]
 pub mod adult_type;
+
+#[path = "access.type.rs"]
+pub mod access_type;
+
+pub mod access;
