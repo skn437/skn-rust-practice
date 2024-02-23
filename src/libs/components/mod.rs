@@ -23,3 +23,6 @@ pub mod adult_type;
 pub mod access_type;
 
 pub mod access;
+
+#[path = "stock.type.rs"]
+pub mod stock_type;

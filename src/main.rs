@@ -9,8 +9,9 @@ use libs::{
   components::access::authorize, components::access_type::AuthorizationStatus,
   components::access_type::ProtectedLocation, components::adult_type::Adult,
   components::grocery_type::Grocery, components::menu, components::selection,
-  components::user::create_user, components::user_type, functions::option,
-  utils::execution::execute_command, utils::execution::gt_execute_command, utils::Direction,
+  components::stock_type::stock_info, components::user::create_user, components::user_type,
+  functions::option, utils::execution::execute_command, utils::execution::gt_execute_command,
+  utils::Direction,
 };
 
 fn main() {
@@ -440,4 +441,6 @@ fn main() {
 
   //* HashMap Practice
   //* HashMap can retrieve data very fast
+  //* Data is printed in random order just like `Java`, so be careful!
+  stock_info();
 }
