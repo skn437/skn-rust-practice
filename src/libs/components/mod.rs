@@ -26,3 +26,6 @@ pub mod access;
 
 #[path = "stock.type.rs"]
 pub mod stock_type;
+
+pub mod input;
+pub mod random;

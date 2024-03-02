@@ -8,10 +8,11 @@ mod tests;
 use libs::{
   components::access::authorize, components::access_type::AuthorizationStatus,
   components::access_type::ProtectedLocation, components::adult_type::Adult,
-  components::grocery_type::Grocery, components::menu, components::selection,
-  components::stock_type::stock_info, components::user::create_user, components::user_type,
-  functions::option, utils::execution::execute_command, utils::execution::gt_execute_command,
-  utils::Direction,
+  components::grocery_type::Grocery, components::menu, components::random::gen_random_number,
+  components::random::get_guess, components::selection, components::stock_type::stock_info,
+  components::user::create_user, components::user_type, functions::option,
+  utils::execution::execute_command, utils::execution::gt_execute_command, utils::message,
+  utils::stdio::get_reader_input, utils::Direction,
 };
 
 fn main() {
@@ -90,6 +91,7 @@ fn main() {
 
   //? Never Print any field of enum wth print! or println! macros
   //* If all fields of an enum is not used then the rust analyzer throws warning
+  //* Functions invoked with "::" is called `Associative Functions`
   get_direction(Direction::Up); //* `::` is just like Java & TypeScript `.`
   get_direction(Direction::Right);
   get_direction(Direction::Bottom);
@@ -113,6 +115,7 @@ fn main() {
   //   Full,
   // }
 
+  //* Tuple
   fn get_tuple() -> (i8, f64, bool) {
     (7, 14.7, true)
   }
@@ -443,4 +446,15 @@ fn main() {
   //* HashMap can retrieve data very fast
   //* Data is printed in random order just like `Java`, so be careful!
   stock_info();
+
+  //* User Input
+  let user_input: String = get_reader_input("Your Name");
+  print!("User Input: {} \n", user_input);
+
+  print!("{} \n", message::Color::blue("Hello Fourth Prince!"));
+
+  //* Random Number
+  print!("Random Number: {} \n", gen_random_number(1, 100));
+
+  get_guess();
 }
