@@ -11,8 +11,9 @@ use libs::{
   components::grocery_type::Grocery, components::menu, components::random::gen_random_number,
   components::random::get_guess, components::selection, components::stock_type::stock_info,
   components::user::create_user, components::user_type, functions::option,
-  utils::execution::execute_command, utils::execution::gt_execute_command, utils::message,
-  utils::stdio::get_reader_input, utils::Direction,
+  utils::env::ExternalConfig, utils::execution::execute_command,
+  utils::execution::gt_execute_command, utils::message, utils::stdio::get_reader_input,
+  utils::Direction,
 };
 
 fn main() {
@@ -457,4 +458,77 @@ fn main() {
   print!("Random Number: {} \n", gen_random_number(1, 100));
 
   get_guess();
+
+  //* Constant & Number Separator
+  const PI: f32 = 3.1416;
+  let num_num: i32 = 100_000_000;
+
+  print!("PI: {}, Num: {} \n", PI, num_num);
+
+  //* Exclusive Range
+  //* 1..4 means from 1 to 3
+  for number in 1..4 {
+    print!("{} \n", number);
+  }
+
+  //* Inclusive Range
+  //* 1..=4 means from 1 to 4
+  for number in 1..=4 {
+    print!("{} \n", number);
+  }
+
+  //* Ownership
+  let s1: &str = "SKN";
+  let s2: &str = s1; //* This is ok as string slice (immutable) is borrowed */
+  let s3: String = String::from("SKN");
+  let s4: String = s3.clone(); //* You should not do that with `String`, as s3 will get destroyed as the ownership has been passed
+
+  print!("s1: {} \n", s1);
+  print!("s2: {} \n", s2);
+  print!("s3: {} \n", s3);
+  print!("s4: {} \n", s4);
+
+  //* Int
+  let num100: i32 = 45;
+  let num101: i32 = num100;
+
+  print!("num100: {} \n", num100);
+  print!("num101: {} \n", num101);
+
+  //*  Rust automatically copies: int, float, char, boolean and tuple(not having String value) types
+  //* They are automatically borrowed
+  //* Borrowed Values are immutable
+  //* To mutate a borrowed variable, a mutable reference should be passed
+
+  let mut str1: String = String::from("Hello SKN");
+
+  fn change_string(text: &mut String) -> String {
+    text.push_str("!");
+    text.to_string() //*  .to_string() can convert &mut String into String
+  }
+
+  print!("{} \n", change_string(&mut str1));
+
+  //* To just borrow a String:
+  let str200: String = String::from("Hello Wang!");
+
+  fn borrow_string(text: &String) -> String {
+    text.to_string() //*  .to_string() can convert &String into String
+  }
+
+  let str201: String = borrow_string(&str200);
+
+  print!("str200: {} \n", str200);
+  print!("str201: {} \n", str201);
+
+  //* You can't have more than one &mut reference of the same variable in the same scope, only one is allowed
+  //* You can't have a mix of mutable reference (&mut) and immutable reference(&) of the same variable in the same scope
+  //* You can have more than one immutable reference(&) of the same variable in the same scope
+  //* A function should not return a referenced value
+
+  //* Config
+  let config = ExternalConfig::new();
+
+  print!("Author Name: {:?} \n", config.author.name);
+  print!("Author Age: {:?} \n", config.author.age);
 }
