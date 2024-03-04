@@ -527,8 +527,80 @@ fn main() {
   //* A function should not return a referenced value
 
   //* Config
-  let config = ExternalConfig::new();
+  let config: ExternalConfig = ExternalConfig::new();
 
   print!("Author Name: {:?} \n", config.author.name);
   print!("Author Age: {:?} \n", config.author.age);
+
+  //* String Slice/ String Literal
+  let string_name: String = String::from("Hello Wang So!");
+
+  //* String Slice Can be sliced like this
+  let last_name: &str = &string_name[6..10];
+  let first_name: &str = &string_name[11..13];
+
+  print!("My last name is {} \n", last_name);
+  print!("My first name is {} \n", first_name);
+
+  //* get first name
+  fn get_first_name(name: &str) -> String {
+    for (index, char) in name.trim().char_indices() {
+      if char == ' ' {
+        return name[..index].to_string();
+      }
+    }
+
+    name[..].to_string()
+  }
+
+  //* get last name
+  fn get_last_name(name: &str) -> String {
+    for (index, char) in name.trim().char_indices() {
+      if char == ' ' {
+        return name[index + 1..].to_string();
+      }
+    }
+
+    String::from("")
+  }
+
+  print!(
+    "My name is Wang So! My first name is {} \n",
+    get_first_name("Wang So")
+  );
+
+  print!(
+    "My name is Wang So! My last name is {} \n",
+    get_last_name("Wang So")
+  );
+
+  //* Array
+  let arr1: [i8; 5] = [1, 2, 3, 4, 5];
+  let arr2: &[i8] = &arr1[1..4]; //* This has to be borrowed or else it won't work
+
+  print!("Sliced Array: {:?} \n", arr2);
+
+  //* `..` operator comes in various flavors. Not only in "slicing", but also in like TypeScript `...` operator
+  //* Mainly in struct new instance creation
+  struct Hello {
+    id: u8,
+    name: String,
+  }
+
+  impl Hello {
+    fn new(id: u8, name: &str) -> Self {
+      Self {
+        id,
+        name: name.to_string(),
+      }
+    }
+  }
+
+  let hello1: Hello = Hello::new(1, "Wang");
+  let hello2: Hello = Hello {
+    id: 2,
+    ..hello1 //* Don't use comma when using `..` operator. The problem is in this way ownership is moved!! Not good way to do things
+  };
+
+  print!("hello1 id: {}, hello2 name: {} \n", hello1.id, hello2.name);
 }

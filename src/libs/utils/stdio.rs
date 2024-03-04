@@ -10,7 +10,7 @@ pub fn get_reader_input(prompt: &str) -> String {
   let result: Result<usize, Error> = stdin().read_line(&mut input);
 
   match result {
-    | Ok(_) => input,
+    | Ok(_) => input.trim().to_string(),
     | Err(e) => {
       print!("Error: {} \n", Color::red(e));
       get_reader_input(prompt)
