@@ -30,6 +30,7 @@ pub fn get_guess() {
     };
 
     //* .cmp() is used to compare values that returns an enum `Ordering` with 3 field: Equal, Less & Greater
+    //* .cmp() takes only `i32`
     match output.cmp(&random_number) {
       | Ordering::Equal => {
         print!("You won! \n");
