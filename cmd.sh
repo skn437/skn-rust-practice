@@ -2,4 +2,4 @@
 
 set -e
 
-./src/.output/main
+printf "Hello From Bash! 👋 \n"

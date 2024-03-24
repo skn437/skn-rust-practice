@@ -2,6 +2,12 @@
 mod libs;
 mod tests;
 
+use std::{
+  collections::HashMap,
+  fmt::Display,
+  io::{self, ErrorKind, Read},
+};
+
 //? Usage::Source
 //use libs::functions::option::Option;
 //use libs::utils::Direction;
@@ -15,6 +21,8 @@ use libs::{
   utils::execution::gt_execute_command, utils::message, utils::stdio::get_reader_input,
   utils::Direction,
 };
+use std::fs::File;
+use unicode_segmentation::UnicodeSegmentation;
 
 fn main() {
   println!("Hello, SKN!");
@@ -454,6 +462,11 @@ fn main() {
 
   print!("{} \n", message::Color::blue("Hello Fourth Prince!"));
 
+  //* */
+  //* LET'S GET RUSTY
+  //* LET'S GET RUSTY
+  //* LET'S GET RUSTY
+  //* */
   //* Random Number
   print!("Random Number: {} \n", gen_random_number(1, 100));
 
@@ -603,4 +616,355 @@ fn main() {
   };
 
   print!("hello1 id: {}, hello2 name: {} \n", hello1.id, hello2.name);
+
+  #[derive(Debug)]
+  struct Rectangle {
+    width: u32,
+    height: u32,
+  }
+
+  //* Multiple `impl` can be written
+  impl Rectangle {
+    fn new(width: u32, height: u32) -> Self {
+      Self { width, height }
+    }
+  }
+
+  impl Rectangle {
+    fn area(&self) -> u32 {
+      self.width * self.height
+    }
+
+    fn can_hold(&self, other_rectangle: &Rectangle) -> bool {
+      self.width > other_rectangle.width && self.height > other_rectangle.height
+    }
+  }
+
+  let rectangle1: Rectangle = Rectangle::new(120, 60);
+  let rectangle2: Rectangle = Rectangle::new(60, 40);
+
+  print!("Rectangle2: {:#?} \n", rectangle2);
+
+  print!("Area of Rectangle1: {:#?} \n", rectangle1.area());
+  print!(
+    "Rectangle 1 can hold Rectangle 2: {} \n",
+    rectangle1.can_hold(&rectangle2)
+  );
+
+  //* Enum variant data
+  #[derive(Debug)]
+  #[allow(dead_code)]
+  enum Example {
+    NoData,
+    StructData { x: i32, y: f64, z: String },
+    SingleData(String),
+    MultipleData(i32, String),
+  }
+
+  //* To handle `null` values, use `Option<>`
+
+  #[derive(Debug)]
+  enum Test {
+    Java(String),
+    TS,
+  }
+
+  fn test_lang(test: &Test) -> u8 {
+    //* Each checking in `match` is called an arm
+    match test {
+      | Test::TS => {
+        print!("Hello TS! \n");
+        7
+      },
+      | Test::Java(value) => {
+        print!("Java Value: {} \n", value);
+        0
+      },
+    }
+  }
+
+  test_lang(&Test::TS);
+  test_lang(&Test::Java(String::from("77")));
+
+  let test1: Test = Test::TS;
+  test_lang(&test1);
+  print!("Test1: {:?} \n", test1);
+
+  //* Vector
+  //* The vector has no size limit
+  //* It is better to use vector.get() to access an element and handle it with `match` rather than using vector[index] because it will cause runtime error
+  let vector1: Vec<i8> = vec![1, 2, 3, 4];
+
+  //* vector.get() returns `Option()`, so it needs to be handled by `Some()` & `None`
+  match &vector1.get(4) {
+    | Some(value) => print!("Vector1 4th Element: {} \n", value),
+    | None => print!("Index out of bound! \n"),
+  }
+
+  //* Always use reference in `for`, `match` & `function`
+  for item in &vector1 {
+    print!("Vector1 Item: {} \n", item);
+  }
+
+  let mut vector2: Vec<i8> = vec![1, 2, 3, 4, 5, 6, 7];
+
+  for item in &mut vector2 {
+    *item += 3 //* You need to use dereference `*` operator to change mutable variable
+  }
+
+  print!("Vector2: {:?} \n", vector2);
+
+  let num7: i8 = 69;
+
+  fn print_num(num: &i8) -> i8 {
+    *num //* You need to dereference to get the value
+  }
+
+  print!("Print Num: {} \n", print_num(&num7));
+
+  //* Vector cannot contain different types of data. But to do that you can use `enum`
+  #[derive(Debug)]
+  enum Data {
+    Int(i8),
+    Float(f64),
+    String(String),
+  }
+
+  let vector: Vec<Data> = vec![
+    Data::Int(7),
+    Data::Float(14.4),
+    Data::String(String::from("Wang So!")),
+  ];
+
+  print!("Vector of different data: {:?} \n", vector);
+
+  match &vector[1] {
+    | Data::Float(value) => print!("The value of float: {} \n", value),
+    | _ => print!("Not a float \n"),
+  }
+
+  print!("Float: {:?} \n", vector[1]);
+
+  //* Strings & Characters
+  let mut user: String = String::from("Wang");
+  user.push_str(" So"); //* String's .push_str() takes a string literal/string slice (&str)
+  user.push('!'); //* String's .push() takes a character
+
+  print!("Hey there, {} \n", user);
+  //* format!, print! and other macros don't take ownerships
+
+  let my_name: String = String::from("Wang So");
+
+  fn string_to_slice(text: &str) -> String {
+    text[5..].to_string()
+  }
+  let first_name: String = string_to_slice(&my_name);
+
+  print!("First Name: {} \n", first_name);
+
+  //* When using String's .bytes(), .chars() or .graphemes(), you don't need to borrow or use reference operator
+  for byte in my_name.bytes() {
+    print!("Bytes of my name: {} \n", byte);
+  }
+
+  let bengali_name: String = String::from("সুখন");
+
+  for grapheme in bengali_name.graphemes(true) {
+    print!("Grapheme of my name: {} \n", grapheme);
+  }
+
+  print!("My Bengali Name: {} \n", bengali_name);
+
+  let sanskrit_greeting: String = String::from("नमस्ते");
+
+  for grapheme in sanskrit_greeting.graphemes(true) {
+    print!("Grapheme of my another name: {} \n", grapheme);
+  }
+
+  print!("Sanskrit Greeting: {} \n", sanskrit_greeting);
+
+  print!("my name: {} \n", my_name);
+
+  //* Hash Map
+  //* Even hash maps can get ownerships, so be careful again
+  let blue: String = String::from("blue");
+  let green: String = String::from("green");
+
+  let mut hashmap7: HashMap<String, u8> = HashMap::new();
+
+  hashmap7.insert(blue, 7); //* Here ownership of `blue` has been moved. It cannot be used again.
+  hashmap7.insert(green, 77);
+
+  //* .entry().or_insert() returns the value of hash map with the given key
+  hashmap7.entry(String::from("blue")).or_insert(78); //* This won't work as "blue" key is already present
+  hashmap7.entry(String::from("Blue")).or_insert(78);
+
+  print!("Hash Map: {:#?} \n", hashmap7);
+
+  let mut new_map: HashMap<String, u8> = HashMap::new();
+
+  let key_string: &str = "hello skn good skn";
+
+  //* .split_whitespace() is used to split a string by whitespace character
+  for word in key_string.split_whitespace() {
+    let data: &mut u8 = new_map.entry(word.to_string()).or_insert(0);
+    *data += 1; //* `&mut` needs dereference `*` operator to get & mutate the value
+  }
+  print!("New Map: {:?} \n", new_map);
+
+  //* File Creation
+  fn open_file() {
+    let result: Result<File, std::io::Error> = File::open("hello.txt");
+
+    match result {
+      | Ok(value) => {
+        print!("{:?} \n", value);
+      },
+      //* e.kind() can give the enum of all error kinds
+      | Err(e) => match e.kind() {
+        | ErrorKind::NotFound => {
+          print!("File Not Found! ❌ \n");
+          print!("Attempting to create the file... \n");
+          create_file();
+        },
+        | _ => panic!("Unknown Error! \n"),
+      },
+    }
+  }
+
+  fn create_file() {
+    let result: Result<File, io::Error> = File::create("hello.txt");
+
+    match result {
+      | Ok(_) => print!("File Created Successfully! ✅ \n"),
+      | Err(e) => print!("{:?}: Couldn't create the file! ❌ \n", e), //* if debug token is used then you can see all the contents of `error`
+    }
+  }
+
+  fn read_file() -> Result<String, io::Error> {
+    let result: Result<File, io::Error> = File::open("hello.txt");
+
+    //* Shadowing `result`
+    //* Good practice to use in error handling
+    let mut result: File = match result {
+      | Ok(value) => value,
+      | Err(e) => return Err(e),
+    };
+
+    let mut s: String = String::new();
+
+    match result.read_to_string(&mut s) {
+      | Ok(_) => Ok(s),
+      | Err(e) => Err(e),
+    }
+  }
+
+  #[allow(dead_code)]
+  fn create_file_example() -> Result<File, io::Error> {
+    //* `?` returns error if error occurs and ends the function without going to the next line
+    //* `?` should be used in a custom function rather than in `main` function
+    let result: File = File::create("skn.txt")?;
+
+    //* .unwrap() panics if error occurs. Not recommended way to handle errors
+    let _: File = File::create("skn.txt").unwrap();
+
+    //* .expect() panics if error occurs but with custom message. Not recommended way to handle errors
+    let _: File = File::create("skn.txt").expect("Couldn't create the file! \n");
+
+    Ok(result)
+  }
+
+  open_file();
+
+  let res: Result<String, io::Error> = read_file();
+
+  match res {
+    | Ok(value) => print!("File Content: \n{}\n", value),
+    | Err(e) => print!("Error: {} \n", e),
+  }
+
+  #[derive(Debug)]
+  #[allow(dead_code)]
+  struct Point<T, S> {
+    x: T,
+    y: S,
+  }
+
+  //* if `enum` or `struct` has generic type then their corresponding `impl` must contain the same generics
+  impl<T, S> Point<T, S> {
+    fn new(x: T, y: S) -> Self {
+      Self { x, y }
+    }
+  }
+
+  //* Separate `impl` can be created for separate types
+  //* This method will only available if x is f64 type
+  #[allow(dead_code)]
+  impl<S> Point<f64, S> {
+    fn float_only(&self) -> f64 {
+      self.x
+    }
+  }
+
+  print!("Point: {:?} \n", Point::new(12.0, 'c'));
+
+  //* Traits
+  #[allow(dead_code)]
+  struct Tweet {
+    username: String,
+    content: String,
+    reply: String,
+    email: String,
+  }
+
+  //* `Trait` is just like Java `Interface` & `Abstract Class` Mixture
+  trait Summary {
+    fn summarize(&self) -> String;
+
+    //* default trait mathods which are defined inside a `trait`, can be used as it is or can be redefined
+    fn welcome(&self) {
+      print!("Hello!!! \n");
+    }
+  }
+
+  impl Summary for Tweet {
+    fn summarize(&self) -> String {
+      format!("{} {}", self.username, self.email)
+    }
+  }
+
+  let t1: Tweet = Tweet {
+    username: String::from("skn437"),
+    content: String::from("Hello SKN!"),
+    reply: String::from("Nothing"),
+    email: String::from("skn437physx@gmail.com"),
+  };
+
+  print!("Tweet1 Summary: {} \n", t1.summarize());
+  t1.welcome();
+
+  fn notify(item: &impl Summary) {
+    print!("Notification: {} \n", item.summarize());
+  }
+
+  //* Multi `trait` impl can be done by using `+`
+  #[allow(dead_code)]
+  fn notify2(item: &(impl Summary + Display)) {
+    print!("Notification: {} \n", item.summarize());
+  }
+
+  notify(&t1);
+
+  //* `where` keyword to use in Generics for `trait` only
+  #[allow(dead_code)]
+  fn notify3<T, S>(item1: &T, item2: &S) -> i32
+  where
+    T: Summary + Display,
+    S: Summary,
+  {
+    print!("{} {} \n", item1.summarize(), item2.summarize());
+
+    let num: i32 = 7;
+    num
+  }
 }
